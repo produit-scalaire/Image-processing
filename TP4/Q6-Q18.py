@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 # --- Paramètres Globaux et Constantes (Tes valeurs) ---
-VIDEO_FILENAME = 'video.avi'
+VIDEO_FILENAME = 'autoroute 3.mp4'
 M_FOR_AVG_BACKGROUND = 150
 M_FOR_ROAD_STD_DEV = 70
 STD_DEV_THRESHOLD_ROAD = 50
@@ -15,10 +15,10 @@ MORPH_DILATE_CARS = 1  # Ajout d'une légère dilatation pour fusionner les frag
 MIN_CAR_AREA = 100  # Fortement diminué (était 150-200)
 MAX_CAR_AREA = 4000  # Augmenté (était 2500-3000)
 
-ROI_RECT = (100, 150, 700, 180)  # (x, y, width, height)
+ROI_RECT = (0, 50, 200, 180)  # (x, y, width, height)
 
 # Pour Q15: Comptage total par franchissement de ligne HORIZONTALE
-COUNTING_LINE_Y_POS = int(ROI_RECT[1] * 1.2)  # Environ 180 si ROI_RECT[1] = 150
+COUNTING_LINE_Y_POS = int(ROI_RECT[1] +50)  # Environ 180 si ROI_RECT[1] = 150
 CROSSING_MARGIN_Y = 10
 MAX_DIST_FOR_TRACKING_HEURISTIC = 100  # Maintenu à une valeur permissive
 
@@ -154,13 +154,7 @@ def q15_update_line_crossing_count(current_centroids, previous_centroids_list, l
                 if py_prev < line_y_pos and cy_curr >= (line_y_pos + margin_y):
                     newly_counted_this_frame += 1
                     next_tracked_cars[car_id]['counted'] = True
-                    # print(f"Frame {frame_idx_debug}: Voiture SUIVIE ID {car_id} comptée. ({px_prev},{py_prev}) -> ({cx_curr},{cy_curr}) vs Ligne {line_y_pos}+{margin_y}")
 
-    # Gérer les nouveaux centroïdes (ceux restants dans unmatched_current_centroids_indices)
-    # Pour ces nouveaux, on cherche un parent dans la liste globale des centroïdes de la frame précédente
-    # pour établir la condition de franchissement initial.
-
-    # Créer une liste de statuts pour les centroïdes de la frame précédente (pour l'appariement des NOUVEAUX objets)
     previous_centroids_matched_status = [False] * len(previous_centroids_list)
 
     for curr_idx in unmatched_current_centroids_indices:
@@ -188,12 +182,6 @@ def q15_update_line_crossing_count(current_centroids, previous_centroids_list, l
                 new_car_id = f"car_{frame_idx_debug}_{curr_idx}"  # ID unique simple
                 next_tracked_cars[new_car_id] = {'centroid': (cx_curr, cy_curr), 'counted': True}  # Compté directement
                 newly_counted_this_frame += 1
-                # print(f"Frame {frame_idx_debug}: NOUVELLE voiture ID {new_car_id} comptée. Prev@({previous_centroids_list[best_prev_match_idx_for_new]}) -> Curr@({cx_curr},{cy_curr}) vs Ligne {line_y_pos}+{margin_y}")
-            # else:
-            # print(f"Frame {frame_idx_debug}: Nouveau centroïde @({cx_curr},{cy_curr}) sous la ligne mais pas de parent valide trouvé.")
-        # else:
-        # print(f"Frame {frame_idx_debug}: Nouveau centroïde @({cx_curr},{cy_curr}) pas encore assez bas pour comptage.")
-
     g_tracked_cars_q15 = next_tracked_cars
     return current_total_count + newly_counted_this_frame
 
