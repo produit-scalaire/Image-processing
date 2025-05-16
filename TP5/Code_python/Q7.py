@@ -208,8 +208,8 @@ def creer_panoramique(img_gauche, img_droite, H):
 
 
 def main():
-    image1_path = "./IMG_1_reduced.jpg"
-    image2_path = "./IMG_2_reduced.jpg"
+    image1_path = "./IMG_1221.jpeg"
+    image2_path = "./IMG_1220.jpeg"
     num_keypoints_desired = 200
     compute_descriptors_flag = True
     alpha_threshold_value = 4.0
