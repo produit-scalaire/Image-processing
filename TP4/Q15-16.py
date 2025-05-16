@@ -189,6 +189,7 @@ def q15_update_line_crossing_count(current_centroids, previous_centroids_list, l
 if __name__ == '__main__':
     video_frames_color_np, video_frames_gray_np = q6_load_all_frames(VIDEO_FILENAME)
 
+    # On part du principe que video_frames_color_np n'est pas None
     num_total_frames, H, W, _ = video_frames_color_np.shape
     g_total_cars_counted_q15 = 0
     g_previous_frame_centroids_q15 = []
